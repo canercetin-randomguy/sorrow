@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"sorrow/token"
 )
 
@@ -39,8 +40,12 @@ func (l *Lexer) CheckSpecialCharacter(character byte) (token.Token, bool) {
 func (l *Lexer) NextToken() token.Token {
 	// Declare a new dummy token variable
 	var tok token.Token
-	if _, ok := l.CheckSpecialCharacter(l.ch); ok {
-		tok = NewToken(token.TokenType(l.ch), l.ch)
+	if tempTok, ok := l.CheckSpecialCharacter(l.ch); ok {
+		if tempTok.Type == token.SEMICOLON {
+			tok = NewToken(token.SEMICOLON, l.ch)
+		} else {
+			tok = NewToken(token.TokenType(l.ch), l.ch)
+		}
 	} else {
 		for {
 			if IsLetter(l.ch) { // is it letter?
@@ -62,16 +67,14 @@ func (l *Lexer) NextToken() token.Token {
 			} else if IsNumber(l.ch) { // if not, is it number?
 				tok = NewToken(token.INT, l.ch)
 				break
-			} else if tempTok, ok := l.CheckSpecialCharacter(l.ch); ok { // if not, then it may be a special character.
-				if tempTok.Type == token.SEMICOLON {
-					tok = NewToken(token.EOF, l.ch)
-				}
+			} else if l.ch == '\n' { // is that a newline?
+				fmt.Println("newline")
+				tok = NewToken(token.NEWLINE, l.ch)
 				break
-			} else {
-				return token.Token{
-					Type:    token.EOF,
-					Literal: ",",
-				}
+			} else { // if none of the above, return the token and break.
+				fmt.Println("else")
+				tok = NewToken(token.EOF, l.ch)
+				break
 			}
 		}
 	}

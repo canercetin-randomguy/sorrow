@@ -19,6 +19,7 @@ var Keywords = map[string]TokenType{
 }
 
 const (
+	IDENT    = "IDENT"
 	VARIABLE = "VARIABLE"
 	ILLEGAL  = "ILLEGAL"
 	EOF      = "EOF"
@@ -36,6 +37,7 @@ const (
 	LBRACE    = "{"
 	RBRACE    = "}"
 	SPACE     = " "
+	NEWLINE   = "\n"
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
