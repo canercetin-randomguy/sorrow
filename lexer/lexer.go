@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	"fmt"
 	"sorrow/token"
 )
 
@@ -44,7 +43,6 @@ func (l *Lexer) NextToken() token.Token {
 		tok = NewToken(token.TokenType(l.ch), l.ch)
 	} else {
 		for {
-			fmt.Println("l.ch", string(l.ch))
 			if IsLetter(l.ch) { // is it letter?
 				l.charStorage = append(l.charStorage, l.ch)
 				l.PeekChar()
@@ -58,24 +56,25 @@ func (l *Lexer) NextToken() token.Token {
 					break
 				}
 				l.readChar() // if none of the above, read next letter.
-			} else if string(l.ch) == " " { // if not, is it space?
-				tok = NewToken(token.EOF, l.ch)
+			} else if l.ch == ' ' { // if not, is it space?
+				tok = NewToken(token.SPACE, l.ch)
 				break
 			} else if IsNumber(l.ch) { // if not, is it number?
-				tok.Type = token.INT
-				tok.Literal = string(l.ch)
+				tok = NewToken(token.INT, l.ch)
 				break
-			} else { // if not, then it may be a special character.
-				if _, ok = l.CheckSpecialCharacter(l.ch); ok {
-					tok = NewToken(token.TokenType(l.ch), l.ch)
-				} else { // if it is not a special character, then it is an illegal character/operator.
-					tok = NewToken(token.ILLEGAL, l.ch)
+			} else if tempTok, ok := l.CheckSpecialCharacter(l.ch); ok { // if not, then it may be a special character.
+				if tempTok.Type == token.SEMICOLON {
+					tok = NewToken(token.EOF, l.ch)
 				}
 				break
+			} else {
+				return token.Token{
+					Type:    token.EOF,
+					Literal: ",",
+				}
 			}
 		}
 	}
-	fmt.Println(tok)
 	l.readChar()
 	l.charStorage = nil
 	return tok

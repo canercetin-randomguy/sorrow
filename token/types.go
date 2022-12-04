@@ -15,6 +15,7 @@ var Keywords = map[string]TokenType{
 	"if":     IF,
 	"else":   ELSE,
 	"return": RETURN,
+	"add":    ADD,
 }
 
 const (
@@ -34,7 +35,7 @@ const (
 	RPAREN    = ")"
 	LBRACE    = "{"
 	RBRACE    = "}"
-
+	SPACE     = " "
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
@@ -47,4 +48,5 @@ const (
 	// Operators
 	EQ     = "=="
 	NOT_EQ = "!="
+	ADD    = "ADD"
 )
